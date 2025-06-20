@@ -1,0 +1,80 @@
+# Digital Ocean App Platform Configuration for ERPNext
+name: erpnext-production
+region: nyc1
+
+services:
+- name: erpnext-web
+  source_dir: /
+  dockerfile_path: Dockerfile
+  github:
+    repo: Mr-Taha-1/erpnext-production
+    branch: main
+    deploy_on_push: true
+  
+  build_command: |
+    echo "Building ERPNext application..."
+    chmod +x startup.sh
+  
+  run_command: ./startup.sh
+  
+  instance_count: 1
+  instance_size_slug: professional-xs
+  
+  http_port: 8000
+  
+  routes:
+  - path: /
+  
+  health_check:
+    http_path: /api/method/ping
+    initial_delay_seconds: 60
+    period_seconds: 30
+    timeout_seconds: 10
+    success_threshold: 1
+    failure_threshold: 3
+  
+  envs:
+  - key: FRAPPE_SITE_NAME_HEADER
+    value: ${APP_DOMAIN}
+  - key: ADMIN_PASSWORD
+    value: admin123
+  - key: DB_HOST
+    type: SECRET
+    value: POSTGRES_HOST
+  - key: DB_PORT
+    value: "25060"
+  - key: DB_NAME
+    value: defaultdb
+  - key: DB_USER
+    type: SECRET
+    value: POSTGRES_USER
+  - key: DB_PASSWORD
+    type: SECRET
+    value: POSTGRES_PASSWORD
+  - key: REDIS_CACHE
+    type: SECRET
+    value: REDIS_URL
+  - key: REDIS_QUEUE
+    type: SECRET
+    value: REDIS_URL
+  - key: REDIS_SOCKETIO
+    type: SECRET
+    value: REDIS_URL
+  - key: REDIS_PASSWORD
+    type: SECRET
+    value: REDIS_PASSWORD
+
+databases:
+- name: erpnext-postgres
+  engine: PG
+  version: "15"
+  size: db-s-2vcpu-4gb
+  num_nodes: 1
+  production: true
+
+- name: erpnext-redis
+  engine: REDIS
+  version: "7"
+  size: db-s-1vcpu-1gb
+  num_nodes: 1
+  production: true
