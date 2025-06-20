@@ -1,0 +1,25 @@
+# ERPNext Production Requirements
+# Core Frappe and ERPNext
+frappe>=15.0.0,<16.0.0
+erpnext>=15.0.0,<16.0.0
+
+# Database drivers
+psycopg2-binary>=2.9.0
+redis>=4.0.0
+
+# Production server
+gunicorn>=20.1.0
+gevent>=21.0.0
+
+# Additional ERPNext dependencies
+bamboo-lib>=0.0.8
+erpnext-shipping>=0.0.1
+frappe-bench>=5.0.0
+
+# Security and performance
+cryptography>=3.4.8
+Pillow>=8.3.2
+requests>=2.25.1
+
+# Development tools (optional)
+watchdog>=2.1.0
